@@ -9,11 +9,13 @@ import { redirect } from "next/navigation";
 
 const bebasNeue = Bebas_Neue({
   variable: "--font-bebas-neue",
+  subsets: ["latin"],
   weight: "400",
 });
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
+  subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
