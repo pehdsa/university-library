@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   DefaultValues,
@@ -27,6 +27,7 @@ import { FIELD_NAMES, FIELD_TYPES } from "@/app/constants";
 import { ImageUpload } from "./ImageUpload";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Loader2Icon } from "lucide-react";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T>;
@@ -41,6 +42,7 @@ export const AuthForm = <T extends FieldValues>({
   defaultValues,
   onSubmit,
 }: AuthFormProps<T>) => {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const form: UseFormReturn<T> = useForm({
@@ -50,19 +52,28 @@ export const AuthForm = <T extends FieldValues>({
 
   // 2. Define a submit handler.
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    const result = await onSubmit(data);
-    if (result.success) {
-      toast.success("Success", {
-        description: isSignIn
-          ? "You have successfully signed in"
-          : "You have successfully signed up",
-      });
+    try {
+      setIsLoading(true);
+      const result = await onSubmit(data);
+      if (result.success) {
+        toast.success("Success", {
+          description: isSignIn
+            ? "You have successfully signed in"
+            : "You have successfully signed up",
+        });
 
-      router.push("/");
-    } else {
+        router.push("/");
+      } else {
+        toast.error(`Error ${isSignIn ? "signing in" : "signing up"}`, {
+          description: result.error ?? "An error occurred",
+        });
+      }
+    } catch (error) {
       toast.error(`Error ${isSignIn ? "signing in" : "signing up"}`, {
-        description: result.error ?? "An error occurred",
+        description: "An error occurred",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,8 +125,14 @@ export const AuthForm = <T extends FieldValues>({
             />
           ))}
 
-          <Button type="submit" className="form-btn">
-            {isSignIn ? "Sign In" : "Sign Up"}
+          <Button type="submit" className="form-btn" disabled={isLoading}>
+            {isLoading ? (
+              <Loader2Icon className="animate-spin" />
+            ) : isSignIn ? (
+              "Sign In"
+            ) : (
+              "Sign Up"
+            )}
           </Button>
         </form>
       </Form>
