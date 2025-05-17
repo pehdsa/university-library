@@ -1,16 +1,22 @@
-import React from 'react'
-import { sampleBooksProps } from "@/app/constants"
+import React from "react";
+import { BookCard } from "./BookCard";
 
-interface BookOverviewProps {
-    title: string;
-    books: sampleBooksProps[]
-    containerClassName?: string;
+interface BookListProps {
+  title: string;
+  books: BookProps[];
+  containerClassName?: string;
 }
 
-export function BookList({ title, books, containerClassName }: BookOverviewProps) {
+export function BookList({ title, books, containerClassName }: BookListProps) {
   return (
-    <section>
-        <h2 className='font-semibold text-4xl text-light-100'>Popular Books</h2>
+    <section className={containerClassName}>
+      <h2 className="font-semibold text-4xl text-light-100">{title}</h2>
+
+      <ul className="book-list">
+        {books.map((book) => (
+          <BookCard key={book.title} {...book} />
+        ))}
+      </ul>
     </section>
-  )
+  );
 }
