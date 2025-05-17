@@ -1,10 +1,15 @@
+import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Bebas_Neue, IBM_Plex_Sans } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 const bebasNeue = Bebas_Neue({
   variable: "--font-bebas-neue",
-  weight: "400"
+  weight: "400",
 });
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -17,16 +22,21 @@ export const metadata: Metadata = {
   description: "Bookwise is a book borrowing university library platform.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const RootLayout = async ({ children }: { children: ReactNode }) => {
+  const session = await auth();
+
   return (
     <html lang="en">
-      <body className={`${bebasNeue.variable} ${ibmPlexSans.variable} antialiased dark`}>
-        {children}
-      </body>
+      <SessionProvider session={session}>
+        <body
+          className={`${bebasNeue.variable} ${ibmPlexSans.variable} antialiased dark`}
+        >
+          {children}
+          <Toaster />
+        </body>
+      </SessionProvider>
     </html>
   );
-}
+};
+
+export default RootLayout;

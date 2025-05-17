@@ -13,3 +13,11 @@ interface BookProps {
   summary: string;
   isLoanedBook?: boolean;
 }
+
+interface AuthCredentialsProps {
+  fullName: string;
+  email: string;
+  password: string;
+  universityId: number;
+  universityCard: string;
+}
