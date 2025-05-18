@@ -3,9 +3,8 @@ import type { Metadata } from "next";
 import { Bebas_Neue, IBM_Plex_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
-import "./globals.css";
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
   variable: "--font-bebas-neue",
@@ -31,7 +30,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
     <html lang="en">
       <SessionProvider session={session}>
         <body
-          className={`${bebasNeue.variable} ${ibmPlexSans.variable} antialiased dark`}
+          className={`${bebasNeue.variable} ${ibmPlexSans.variable} antialiased`}
         >
           {children}
           <Toaster />
